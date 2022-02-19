@@ -18,6 +18,13 @@ jobs:
       - name: Free disk space
         uses: ./.github/actions/free-disk-space
 
+      - name: Build 'autoware-core'
+        uses: ./.github/actions/docker-build-and-push
+        with:
+          bake-target: autoware-core
+          platforms: linux/amd64
+          tag-suffix: -amd64
+
       - name: Build 'autoware-universe'
         uses: ./.github/actions/docker-build-and-push
         with:
