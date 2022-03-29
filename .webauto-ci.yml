@@ -1,0 +1,83 @@
+version: 2
+
+artifacts:
+  - name: main
+    build:
+      type: awf/auto/main/arm64/v1
+  - name: planning_sim_v2
+    build:
+      type: awf/auto/planning_sim/amd64/v2
+
+simulations:
+  - name: lexus_planning_sim
+    type: planning_sim_v2
+    simulator:
+      deployment:
+        type: container
+        artifact: planning_sim_v2
+      runtime:
+        type: simulator/standard1/amd64/medium
+        cpu: 4
+        memory: 8192
+      parameters:
+        launch_autoware: "false"
+        architecture_type: awf/auto
+        initialize_duration: "45"
+
+    components:
+      - name: maps
+        deployment:
+          type: container
+          artifact: main
+        runtime:
+          type: component/standard1/arm64/medium
+          cpu: 2
+          memory: 4096
+        application:
+          roslaunch:
+            package_name: scenario_simulator_launch
+            file_name: autoware_auto_map.launch.py
+            arguments:
+              map_path: ${map_path}
+              lanelet2_map_file: ${osm_map_file}
+              pointcloud_map_file: ${pcd_map_file}
+              architecture_type: awf/auto
+      - name: planning
+        deployment:
+          type: container
+          artifact: main
+        runtime:
+          type: component/standard1/arm64/medium
+          cpu: 4
+          memory: 8192
+        application:
+          roslaunch:
+            package_name: scenario_simulator_launch
+            file_name: autoware_auto_planning.launch.py
+            arguments:
+              architecture_type: awf/auto
+      - name: perception
+        deployment:
+          type: container
+          artifact: main
+        runtime:
+          type: component/standard1/arm64/medium
+          cpu: 4
+          memory: 8192
+        application:
+          roslaunch:
+            package_name: scenario_simulator_launch
+            file_name: autoware_auto_perception.launch.py
+            arguments:
+              architecture_type: awf/auto
+
+release:
+  components:
+    - name: planning
+      deployment:
+        type: container
+        artifact: main
+    - name: perception
+      deployment:
+        type: container
+        artifact: main
