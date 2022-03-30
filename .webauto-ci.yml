@@ -21,7 +21,7 @@ simulations:
         memory: 8192
       parameters:
         launch_autoware: "false"
-        architecture_type: awf/auto
+        architecture_type: awf/universe
         initialize_duration: "45"
 
     components:
@@ -41,7 +41,7 @@ simulations:
               map_path: ${map_path}
               lanelet2_map_file: ${osm_map_file}
               pointcloud_map_file: ${pcd_map_file}
-              architecture_type: awf/auto
+              architecture_type: awf/universe
       - name: planning
         deployment:
           type: container
@@ -55,7 +55,7 @@ simulations:
             package_name: scenario_simulator_launch
             file_name: autoware_auto_planning.launch.py
             arguments:
-              architecture_type: awf/auto
+              architecture_type: awf/universe
       - name: perception
         deployment:
           type: container
@@ -69,7 +69,7 @@ simulations:
             package_name: scenario_simulator_launch
             file_name: autoware_auto_perception.launch.py
             arguments:
-              architecture_type: awf/auto
+              architecture_type: awf/universe
 
 release:
   components:
