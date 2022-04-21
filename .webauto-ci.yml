@@ -89,7 +89,7 @@ simulations:
             arguments:
               launch_dummy_perception: false
               launch_dummy_vehicle: false
-              vehicle_info_param_file: $(ros2 pkg prefix sample_vehicle_description)/share/sample_vehicle_description/config/vehicle_info.param.yaml
+              vehicle_info_param_file: ${autoware_install_path}/sample_vehicle_description/share/sample_vehicle_description/config/vehicle_info.param.yaml
               vehicle_model: sample_vehicle
               scenario_simulation: true
               architecture_type: awf/universe
@@ -124,7 +124,7 @@ simulations:
           roslaunch:
             package_name: tier4_planning_launch
             file_name: planning.launch.xml
-            vehicle_info_param_file: $(ros2 pkg prefix sample_vehicle_description)/share/sample_vehicle_description/config/vehicle_info.param.yaml
+            vehicle_info_param_file: ${autoware_install_path}/sample_vehicle_description/share/sample_vehicle_description/config/vehicle_info.param.yaml
             arguments:
               architecture_type: awf/universe
       - name: control
@@ -140,7 +140,7 @@ simulations:
             package_name: tier4_control_launch
             file_name: control.launch.py
             lateral_controller_mode: mpc_follower
-            vehicle_info_param_file: $(ros2 pkg prefix sample_vehicle_description)/share/sample_vehicle_description/config/vehicle_info.param.yaml
+            vehicle_info_param_file: ${autoware_install_path}/sample_vehicle_description/share/sample_vehicle_description/config/vehicle_info.param.yaml
             arguments:
               architecture_type: awf/universe
 
