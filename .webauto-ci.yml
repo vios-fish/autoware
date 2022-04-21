@@ -40,7 +40,7 @@ simulations:
             arguments:
               vehicle_model: sample_vehicle
               sensor_model: sample_sensor_kit
-              launch_vehicle_interface: true
+              launch_vehicle_interface: "true"
               architecture_type: awf/universe
       - name: system
         deployment:
@@ -71,8 +71,8 @@ simulations:
             package_name: tier4_autoware_api_launch
             file_name: autoware_api.launch.xml
             arguments:
-              init_simulator_pose: true
-              init_localization_pose: false
+              init_simulator_pose: "true"
+              init_localization_pose: "false"
               architecture_type: awf/universe
       - name: simple_simulator
         deployment:
@@ -87,11 +87,11 @@ simulations:
             package_name: tier4_simulator_launch
             file_name: simulator.launch.xml
             arguments:
-              launch_dummy_perception: false
-              launch_dummy_vehicle: false
+              launch_dummy_perception: "false"
+              launch_dummy_vehicle: "false"
               vehicle_info_param_file: ${autoware_install_path}/sample_vehicle_description/share/sample_vehicle_description/config/vehicle_info.param.yaml
               vehicle_model: sample_vehicle
-              scenario_simulation: true
+              scenario_simulation: "true"
               architecture_type: awf/universe
       - name: map
         deployment:
@@ -108,7 +108,7 @@ simulations:
             arguments:
               vehicle_model: sample_vehicle
               sensor_model: sample_sensor_kit
-              launch_vehicle_interface: true
+              launch_vehicle_interface: "true"
               lanelet2_map_file: ${osm_map_file}
               pointcloud_map_file: ${pcd_map_file}
               architecture_type: awf/universe
