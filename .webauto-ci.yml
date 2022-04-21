@@ -3,10 +3,10 @@ version: 2
 artifacts:
   - name: main
     build:
-      type: awf/auto/main/arm64/v1
+      type: awf/universe/main/arm64/v1
   - name: planning_sim_v2
     build:
-      type: awf/auto/planning_sim/amd64/v2
+      type: awf/universe/planning_sim/amd64/v2
 
 simulations:
   - name: lexus_planning_sim
@@ -25,7 +25,7 @@ simulations:
         initialize_duration: "45"
 
     components:
-      - name: maps
+      - name: vehicle
         deployment:
           type: container
           artifact: main
@@ -35,10 +35,80 @@ simulations:
           memory: 4096
         application:
           roslaunch:
-            package_name: scenario_simulator_launch
-            file_name: autoware_auto_map.launch.py
+            package_name: tier4_vehicle_launch
+            file_name: vehicle.launch.xml
             arguments:
-              map_path: ${map_path}
+              vehicle_model: sample_vehicle
+              sensor_model: sample_sensor_kit
+              launch_vehicle_interface: true
+              architecture_type: awf/universe
+      - name: system
+        deployment:
+          type: container
+          artifact: main
+        runtime:
+          type: component/standard1/arm64/medium
+          cpu: 2
+          memory: 4096
+        application:
+          roslaunch:
+            package_name: tier4_system_launch
+            file_name: system.launch.xml
+            arguments:
+              vehicle_model: sample_vehicle
+              sensor_model: sample_sensor_kit
+              architecture_type: awf/universe
+      - name: autoware_api
+        deployment:
+          type: container
+          artifact: main
+        runtime:
+          type: component/standard1/arm64/medium
+          cpu: 2
+          memory: 4096
+        application:
+          roslaunch:
+            package_name: tier4_autoware_api_launch
+            file_name: autoware_api.launch.xml
+            arguments:
+              init_simulator_pose: true
+              init_localization_pose: false
+              architecture_type: awf/universe
+      - name: simple_simulator
+        deployment:
+          type: container
+          artifact: main
+        runtime:
+          type: component/standard1/arm64/medium
+          cpu: 2
+          memory: 4096
+        application:
+          roslaunch:
+            package_name: tier4_simulator_launch
+            file_name: simulator.launch.xml
+            arguments:
+              launch_dummy_perception: false
+              launch_dummy_vehicle: false
+              vehicle_info_param_file: ${autoware_install_path}/sample_vehicle_description/share/sample_vehicle_description/config/vehicle_info.param.yaml
+              vehicle_model: sample_vehicle
+              scenario_simulation: true
+              architecture_type: awf/universe
+      - name: map
+        deployment:
+          type: container
+          artifact: main
+        runtime:
+          type: component/standard1/arm64/medium
+          cpu: 2
+          memory: 4096
+        application:
+          roslaunch:
+            package_name: tier4_map_launch
+            file_name: map.launch.py
+            arguments:
+              vehicle_model: sample_vehicle
+              sensor_model: sample_sensor_kit
+              launch_vehicle_interface: true
               lanelet2_map_file: ${osm_map_file}
               pointcloud_map_file: ${pcd_map_file}
               architecture_type: awf/universe
@@ -52,11 +122,12 @@ simulations:
           memory: 8192
         application:
           roslaunch:
-            package_name: scenario_simulator_launch
-            file_name: autoware_auto_planning.launch.py
+            package_name: tier4_planning_launch
+            file_name: planning.launch.xml
+            vehicle_info_param_file: ${autoware_install_path}/sample_vehicle_description/share/sample_vehicle_description/config/vehicle_info.param.yaml
             arguments:
               architecture_type: awf/universe
-      - name: perception
+      - name: control
         deployment:
           type: container
           artifact: main
@@ -66,8 +137,10 @@ simulations:
           memory: 8192
         application:
           roslaunch:
-            package_name: scenario_simulator_launch
-            file_name: autoware_auto_perception.launch.py
+            package_name: tier4_control_launch
+            file_name: control.launch.py
+            lateral_controller_mode: mpc_follower
+            vehicle_info_param_file: ${autoware_install_path}/sample_vehicle_description/share/sample_vehicle_description/config/vehicle_info.param.yaml
             arguments:
               architecture_type: awf/universe
 
