@@ -60,7 +60,7 @@ fi
 
 # Check verbose option
 if [ "$option_verbose" = "true" ]; then
-    ansible_args+=("-v")
+    ansible_args+=("-vvv")
 fi
 
 # Check NVIDIA Installation
@@ -69,6 +69,18 @@ if [ "$option_no_nvidia" = "true" ]; then
 elif [ "$option_yes" = "true" ]; then
     ansible_args+=("--extra-vars" "install_nvidia=y")
 fi
+
+# Load env
+source "$SCRIPT_DIR/amd64.env"
+if [ "$(uname -m)" = "aarch64" ]; then
+    source "$SCRIPT_DIR/arm64.env"
+fi
+
+# Add env args
+# shellcheck disable=SC2013
+for env_name in $(sed "s/=.*//" <amd64.env); do
+    ansible_args+=("--extra-vars" "${env_name}=${!env_name}")
+done
 
 # Install sudo
 if ! (command -v sudo >/dev/null 2>&1); then
