@@ -124,9 +124,9 @@ simulations:
           roslaunch:
             package_name: tier4_planning_launch
             file_name: planning.launch.xml
-            vehicle_info_param_file: ${autoware_install_path}/sample_vehicle_description/share/sample_vehicle_description/config/vehicle_info.param.yaml
             arguments:
               architecture_type: awf/universe
+              vehicle_info_param_file: ${autoware_install_path}/sample_vehicle_description/share/sample_vehicle_description/config/vehicle_info.param.yaml
       - name: control
         deployment:
           type: container
@@ -140,9 +140,9 @@ simulations:
             package_name: tier4_control_launch
             file_name: control.launch.py
             lateral_controller_mode: mpc_follower
-            vehicle_info_param_file: ${autoware_install_path}/sample_vehicle_description/share/sample_vehicle_description/config/vehicle_info.param.yaml
             arguments:
               architecture_type: awf/universe
+              vehicle_info_param_file: ${autoware_install_path}/sample_vehicle_description/share/sample_vehicle_description/config/vehicle_info.param.yaml
 
 release:
   components:
