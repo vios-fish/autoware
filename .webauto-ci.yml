@@ -142,7 +142,7 @@ simulations:
             lateral_controller_mode: mpc_follower
             arguments:
               architecture_type: awf/universe
-              vehicle_info_param_file: ${autoware_install_path}/sample_vehicle_description/share/sample_vehicle_description/config/vehicle_info.param.yaml
+              vehicle_info_param_file: ${install_path}/sample_vehicle_description/share/sample_vehicle_description/config/vehicle_info.param.yaml
 
 release:
   components:
