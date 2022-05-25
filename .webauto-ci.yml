@@ -109,8 +109,7 @@ simulations:
               vehicle_model: sample_vehicle
               sensor_model: sample_sensor_kit
               launch_vehicle_interface: "true"
-              lanelet2_map_file: ${map_path}/${osm_map_filename}
-              pointcloud_map_file: ${map_path}/${pcd_map_filename}
+              map_path: ${map_path}
               architecture_type: awf/universe
       - name: planning
         deployment:
