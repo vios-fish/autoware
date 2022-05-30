@@ -3,10 +3,7 @@ version: 2
 artifacts:
   - name: main
     build:
-      type: awf/universe/main/arm64/v1
-  - name: planning_sim_v2
-    build:
-      type: awf/universe/planning_sim/amd64/v1
+      type: awf/universe/main/amd64/v2
 
 simulations:
   - name: lexus_planning_sim
@@ -17,132 +14,14 @@ simulations:
         artifact: planning_sim_v2
       runtime:
         type: simulator/standard1/amd64/medium
-        cpu: 4
-        memory: 8192
+        cpu: 8
+        memory: 16384
       parameters:
-        launch_autoware: "false"
+        launch_autoware: "true"
+        autoware_launch_package: autoware_launch
+        autoware_launch_file: planning_simulator.launch.xml
         architecture_type: awf/universe
         initialize_duration: "45"
-
-    components:
-      - name: vehicle
-        deployment:
-          type: container
-          artifact: main
-        runtime:
-          type: component/standard1/arm64/medium
-          cpu: 2
-          memory: 4096
-        application:
-          roslaunch:
-            package_name: tier4_vehicle_launch
-            file_name: vehicle.launch.xml
-            arguments:
-              vehicle_model: sample_vehicle
-              sensor_model: sample_sensor_kit
-              launch_vehicle_interface: "true"
-              architecture_type: awf/universe
-      - name: system
-        deployment:
-          type: container
-          artifact: main
-        runtime:
-          type: component/standard1/arm64/medium
-          cpu: 2
-          memory: 4096
-        application:
-          roslaunch:
-            package_name: tier4_system_launch
-            file_name: system.launch.xml
-            arguments:
-              vehicle_model: sample_vehicle
-              sensor_model: sample_sensor_kit
-              architecture_type: awf/universe
-      - name: autoware_api
-        deployment:
-          type: container
-          artifact: main
-        runtime:
-          type: component/standard1/arm64/medium
-          cpu: 2
-          memory: 4096
-        application:
-          roslaunch:
-            package_name: tier4_autoware_api_launch
-            file_name: autoware_api.launch.xml
-            arguments:
-              init_simulator_pose: "true"
-              init_localization_pose: "false"
-              architecture_type: awf/universe
-      - name: simple_simulator
-        deployment:
-          type: container
-          artifact: main
-        runtime:
-          type: component/standard1/arm64/medium
-          cpu: 2
-          memory: 4096
-        application:
-          roslaunch:
-            package_name: tier4_simulator_launch
-            file_name: simulator.launch.xml
-            arguments:
-              launch_dummy_perception: "false"
-              launch_dummy_vehicle: "false"
-              vehicle_info_param_file: ${autoware_install_path}/sample_vehicle_description/share/sample_vehicle_description/config/vehicle_info.param.yaml
-              vehicle_model: sample_vehicle
-              scenario_simulation: "true"
-              architecture_type: awf/universe
-      - name: map
-        deployment:
-          type: container
-          artifact: main
-        runtime:
-          type: component/standard1/arm64/medium
-          cpu: 2
-          memory: 4096
-        application:
-          roslaunch:
-            package_name: tier4_map_launch
-            file_name: map.launch.py
-            arguments:
-              vehicle_model: sample_vehicle
-              sensor_model: sample_sensor_kit
-              launch_vehicle_interface: "true"
-              lanelet2_map_file: ${osm_map_file}
-              pointcloud_map_file: ${pcd_map_file}
-              architecture_type: awf/universe
-      - name: planning
-        deployment:
-          type: container
-          artifact: main
-        runtime:
-          type: component/standard1/arm64/medium
-          cpu: 4
-          memory: 8192
-        application:
-          roslaunch:
-            package_name: tier4_planning_launch
-            file_name: planning.launch.xml
-            vehicle_info_param_file: ${autoware_install_path}/sample_vehicle_description/share/sample_vehicle_description/config/vehicle_info.param.yaml
-            arguments:
-              architecture_type: awf/universe
-      - name: control
-        deployment:
-          type: container
-          artifact: main
-        runtime:
-          type: component/standard1/arm64/medium
-          cpu: 4
-          memory: 8192
-        application:
-          roslaunch:
-            package_name: tier4_control_launch
-            file_name: control.launch.py
-            lateral_controller_mode: mpc_follower
-            vehicle_info_param_file: ${autoware_install_path}/sample_vehicle_description/share/sample_vehicle_description/config/vehicle_info.param.yaml
-            arguments:
-              architecture_type: awf/universe
 
 release:
   components:
