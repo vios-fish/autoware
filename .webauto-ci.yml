@@ -11,7 +11,7 @@ simulations:
     simulator:
       deployment:
         type: container
-        artifact: planning_sim_v2
+        artifact: main
       runtime:
         type: simulator/standard1/amd64/medium
         cpu: 8
